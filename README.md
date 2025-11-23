@@ -1,73 +1,63 @@
-# React + TypeScript + Vite
+Letterly – AI-Powered Cover Letter Generator
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Letterly is a modern AI-powered web application that helps users create personalized, professional cover letters in seconds.
+Using intelligent text generation, Letterly adapts tone, structure, and content based on each user's profile and job description.
 
-Currently, two official plugins are available:
+Built with React, TypeScript, and Vite, it offers a fast, intuitive, and visually clean experience, with support for multiple languages, light/dark themes, and reusable UI components.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+✨ Features
 
-## React Compiler
+ - AI-Generated Cover Letters
+Generate custom cover letters based on job descriptions and user details.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- Multilingual Support
+Switch languages instantly with a built-in language system.
 
-## Expanding the ESLint configuration
+- Theme Toggle
+Light and dark mode for a smooth, modern UI.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Clean, Reusable Components
+Logo, Navigation, ThemeToggle, LanguageSwitch, and more.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- Fast and Modern Stack
+React + TypeScript + Vite for optimal performance.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- Fully Responsive Design
+Works perfectly on desktop and mobile.
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- Project Structure
+src/
+  assets/               → images & static assets
+  components/
+    ui/                 → UI components (Logo, Navigation, ThemeToggle…)
+  contexts/             → Language & Theme contexts
+  hooks/                → Custom hooks
+  lib/                  → Utility functions
+  pages/                → Main pages (Home, Generate, About…)
+  App.tsx               → Root component
+  main.tsx              → App entry point
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- Installation & Setup
+# Clone the repository
+git clone https://github.com/your-username/letterly.git
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+# Navigate to the project folder
+cd letterly
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+🛠️ Technologies Used
+
+React
+
+TypeScript
+
+Vite
+
+TailwindCSS / custom UI components
+
+AI text generation (OpenAI or any LLM API)
