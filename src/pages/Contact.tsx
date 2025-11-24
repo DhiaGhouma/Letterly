@@ -119,27 +119,94 @@ const Contact = () => {
                 </motion.div>
             </div>
 
-            {/* Hovering Contact Bot */}
+            {/* Enhanced Hovering Bot with Shadow & Glow */}
             <motion.div
-                initial={{ opacity: 0, scale: 0.8 }}
+                initial={{ opacity: 0, scale: 0.8, rotate: -10 }}
                 animate={{
                     opacity: 1,
                     scale: 1,
+                    rotate: 0,
                     y: [0, -20, 0],
                 }}
                 transition={{
                     opacity: { duration: 0.6, delay: 0.4 },
                     scale: { duration: 0.6, delay: 0.4 },
+                    rotate: { duration: 0.6, delay: 0.4 },
                     y: {
                         duration: 3,
                         repeat: Infinity,
                         ease: "easeInOut",
                     }
                 }}
-                className="absolute left-4 lg:left-20 top-32 w-48 lg:w-64 hidden md:block"
+                whileHover={{
+                    scale: 1.05,
+                    rotate: [0, -5, 5, 0],
+                    transition: { duration: 0.5 }
+                }}
+                className="absolute right-4 lg:right-20 top-40 w-48 lg:w-64 hidden md:block cursor-pointer"
+                style={{
+                    filter: "drop-shadow(0 20px 40px rgba(187, 161, 79, 0.3)) drop-shadow(0 10px 20px rgba(0, 0, 0, 0.2))",
+                }}
             >
-                <img src={contactBot} alt="Contact Letterly Bot" className="w-full h-auto drop-shadow-2xl" />
+                {/* Glowing background circle */}
+                <motion.div
+                    animate={{
+                        scale: [1, 1.1, 1],
+                        opacity: [0.3, 0.5, 0.3],
+                    }}
+                    transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                    }}
+                    className="absolute inset-0 -z-10 rounded-full blur-3xl"
+                    style={{
+                        background: "radial-gradient(circle, rgba(187, 161, 79, 0.4) 0%, transparent 70%)",
+                    }}
+                />
+
+                {/* Bot Image */}
+                <motion.img
+                    src={contactBot}
+                    alt="Letterly Bot"
+                    className="w-full h-auto relative z-10"
+                    animate={{
+                        filter: [
+                            "drop-shadow(0 0 20px rgba(187, 161, 79, 0.4))",
+                            "drop-shadow(0 0 30px rgba(187, 161, 79, 0.6))",
+                            "drop-shadow(0 0 20px rgba(187, 161, 79, 0.4))",
+                        ],
+                    }}
+                    transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                    }}
+                />
+
+                {/* Sparkle effects around bot */}
+                {[...Array(3)].map((_, i) => (
+                    <motion.div
+                        key={i}
+                        className="absolute w-2 h-2 bg-primary rounded-full"
+                        style={{
+                            top: `${20 + i * 30}%`,
+                            left: `${10 + i * 20}%`,
+                        }}
+                        animate={{
+                            scale: [0, 1, 0],
+                            opacity: [0, 1, 0],
+                        }}
+                        transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            delay: i * 0.6,
+                            ease: "easeInOut",
+                        }}
+                    />
+                ))}
             </motion.div>
+
         </div>
     );
 };
