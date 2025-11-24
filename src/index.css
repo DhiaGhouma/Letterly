@@ -1,0 +1,147 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+    :root {
+        /* Letterly Light Theme */
+        --background: 30 22% 77%;
+        --background-secondary: 0 0% 100%;
+        --foreground: 0 0% 12%;
+
+        --card: 0 0% 100%;
+        --card-foreground: 0 0% 12%;
+
+        --popover: 0 0% 100%;
+        --popover-foreground: 0 0% 12%;
+
+        --primary: 46 44% 52%;
+        --primary-foreground: 0 0% 100%;
+        --primary-glow: 46 54% 62%;
+
+        --secondary: 0 0% 5%;
+        --secondary-foreground: 0 0% 100%;
+
+        --muted: 30 15% 85%;
+        --muted-foreground: 0 0% 40%;
+
+        --accent: 43 74% 66%;
+        --accent-foreground: 0 0% 12%;
+
+        --destructive: 0 84.2% 60.2%;
+        --destructive-foreground: 0 0% 100%;
+
+        --border: 30 15% 70%;
+        --input: 30 15% 70%;
+        --ring: 46 44% 52%;
+
+        --radius: 0.75rem;
+
+        /* Gradients */
+        --gradient-light: linear-gradient(135deg, hsl(30, 22%, 77%) 0%, hsl(43, 74%, 66%) 100%);
+        --gradient-subtle: linear-gradient(180deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%);
+
+        /* Effects */
+        --glass-bg: rgba(255, 255, 255, 0.7);
+        --glass-border: rgba(255, 255, 255, 0.3);
+        --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.04);
+        --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.08);
+        --shadow-large: 0 12px 32px rgba(0, 0, 0, 0.12);
+        --glow-golden: 0 0 20px rgba(187, 161, 79, 0.4);
+    }
+
+    .dark {
+        /* Letterly Dark Theme */
+        --background: 0 0% 4%;
+        --background-secondary: 0 0% 8%;
+        --foreground: 0 0% 82%;
+
+        --card: 0 0% 8%;
+        --card-foreground: 0 0% 82%;
+
+        --popover: 0 0% 8%;
+        --popover-foreground: 0 0% 82%;
+
+        --primary: 46 44% 52%;
+        --primary-foreground: 0 0% 10%;
+        --primary-glow: 46 54% 62%;
+
+        --secondary: 0 0% 12%;
+        --secondary-foreground: 0 0% 100%;
+
+        --muted: 0 0% 12%;
+        --muted-foreground: 0 0% 60%;
+
+        --accent: 43 74% 66%;
+        --accent-foreground: 0 0% 10%;
+
+        --destructive: 0 62.8% 50%;
+        --destructive-foreground: 0 0% 100%;
+
+        --border: 0 0% 15%;
+        --input: 0 0% 15%;
+        --ring: 46 44% 52%;
+
+        /* Gradients */
+        --gradient-dark: linear-gradient(135deg, hsl(0, 0%, 4%) 0%, hsl(43, 40%, 15%) 100%);
+        --gradient-subtle: linear-gradient(180deg, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 100%);
+
+        /* Effects */
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --glass-border: rgba(255, 255, 255, 0.1);
+        --shadow-subtle: 0 2px 8px rgba(0, 0, 0, 0.4);
+        --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.6);
+        --shadow-large: 0 12px 32px rgba(0, 0, 0, 0.8);
+        --glow-golden: 0 0 30px rgba(187, 161, 79, 0.6);
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border;
+    }
+
+    body {
+        @apply bg-background text-foreground font-body antialiased;
+        background: var(--gradient-light);
+        transition: background 0.3s ease;
+    }
+
+    .dark body {
+        background: var(--gradient-dark);
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        @apply font-display font-bold tracking-tight;
+    }
+}
+
+@layer utilities {
+    .glass-effect {
+        background: var(--glass-bg);
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .shadow-premium {
+        box-shadow: var(--shadow-medium);
+    }
+
+    .glow-golden {
+        box-shadow: var(--glow-golden);
+    }
+
+    .text-balance {
+        text-wrap: balance;
+    }
+}
