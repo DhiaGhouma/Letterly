@@ -1,10 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* -----------------------------------------------------------------------
+   LETTERLY DESIGN SYSTEM
+   All theme colors, gradients, effects and variables (HSL only)
+------------------------------------------------------------------------ */
 
 @layer base {
     :root {
@@ -100,13 +103,17 @@ All colors MUST be HSL.
     }
 }
 
+/* -----------------------------------------------------------------------
+   GLOBAL BASE STYLES
+------------------------------------------------------------------------ */
+
 @layer base {
     * {
         @apply border-border;
     }
 
     body {
-        @apply bg-background text-foreground font-body antialiased;
+        @apply text-foreground font-body antialiased;
         background: var(--gradient-light);
         transition: background 0.3s ease;
     }
@@ -124,6 +131,10 @@ All colors MUST be HSL.
         @apply font-display font-bold tracking-tight;
     }
 }
+
+/* -----------------------------------------------------------------------
+   UTILITIES
+------------------------------------------------------------------------ */
 
 @layer utilities {
     .glass-effect {
