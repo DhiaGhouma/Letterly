@@ -1,47 +1,153 @@
 Letterly – AI-Powered Cover Letter Generator
 
-Letterly is a modern AI-powered web application that helps users create personalized, professional cover letters in seconds.
-Using intelligent text generation, Letterly adapts tone, structure, and content based on each user's profile and job description.
+Letterly is a modern AI-powered web application that helps users create personalized, professional motivation letters in seconds.
 
-Built with React, TypeScript, and Vite, it offers a fast, intuitive, and visually clean experience, with support for multiple languages, light/dark themes, and reusable UI components.
+Using intelligent text generation, Letterly adapts the tone, structure, and content based on the user’s job description, profile, experience, and selected language.
+Designed with a premium black & gold aesthetic, Letterly offers a clean, modern, fast user experience.
 
 ✨ Features
+AI-Generated Cover Letters
 
- - AI-Generated Cover Letters
-Generate custom cover letters based on job descriptions and user details.
+Generate highly personalized cover letters instantly from:
 
-- Multilingual Support
-Switch languages instantly with a built-in language system.
+Job description
 
-- Theme Toggle
-Light and dark mode for a smooth, modern UI.
+User experience
 
-- Clean, Reusable Components
-Logo, Navigation, ThemeToggle, LanguageSwitch, and more.
+Key skills
 
-- Fast and Modern Stack
-React + TypeScript + Vite for optimal performance.
+Extra context (optional)
 
-- Fully Responsive Design
-Works perfectly on desktop and mobile.
+Multilingual Letter Generation
 
-- Project Structure
+Create letters in multiple languages:
+
+English
+
+French
+
+Arabic
+
+…and more
+
+Template Selection System (Premium UI)
+
+Users can choose from multiple professional, visually distinct templates:
+
+Minimal Classic
+
+Framed Premium (gold cadres)
+
+Modern Clean
+
+Elegant Serif
+
+Black & Gold Executive
+
+Templates are:
+
+Switchable instantly
+
+Fully responsive
+
+Designed to look premium
+
+Optional Link + QR Code Generator
+
+Add an optional field for:
+
+GitHub
+
+LinkedIn
+
+Website
+
+Portfolio
+
+Custom URL
+
+If a link is provided:
+
+A QR code is generated on the frontend
+
+Displayed inside the letter preview (top-right or bottom-right)
+
+Included in PDF/DOCX exports
+If no link is provided, no QR code appears.
+
+Letter Download Options
+
+Users can download their generated letter in:
+
+PDF
+
+DOCX
+
+TXT
+
+Export works with OR without templates.
+
+Light / Dark Theme
+
+Built-in modern theme switcher with:
+
+Soft gradients
+
+Premium gold glow effects
+
+Smooth transitions
+
+Responsive, Clean UI
+
+Perfect experience on:
+
+Desktop
+
+Tablet
+
+Mobile
+
+Reusable Component System
+
+Includes:
+
+TemplateCard
+
+Navigation
+
+ThemeToggle
+
+LanguageSwitch
+
+Modal + Dialog
+
+QR preview
+
+Editor/Preview layout
+
+Fast, Modern Frontend Stack
+
+Powered by React + TypeScript + Vite for optimal development speed and performance.
+
+📁 Project Structure
 src/
-  assets/               → images & static assets
+  assets/                → Images & static assets
   components/
-    ui/                 → UI components (Logo, Navigation, ThemeToggle…)
-  contexts/             → Language & Theme contexts
-  hooks/                → Custom hooks
-  lib/                  → Utility functions
-  pages/                → Main pages (Home, Generate, About…)
-  App.tsx               → Root component
-  main.tsx              → App entry point
+    ui/                  → UI components (Navigation, ThemeToggle, TemplateCard…)
+    templates/           → All professional letter templates
+  contexts/              → Language & Theme contexts
+  hooks/                 → Custom hooks
+  lib/                   → Utility functions (AI, QR, export…)
+  pages/                 → Main pages (Home, Generate, About…)
+  styles/                → Theme system (black & gold, gradients, effects)
+  App.tsx                → Root component
+  main.tsx               → App entry point
 
-- Installation & Setup
+🚀 Installation & Setup
 # Clone the repository
 git clone https://github.com/your-username/letterly.git
 
-# Navigate to the project folder
+# Navigate to project folder
 cd letterly
 
 # Install dependencies
@@ -58,6 +164,12 @@ TypeScript
 
 Vite
 
-TailwindCSS / custom UI components
+TailwindCSS + custom premium design system
 
-AI text generation (OpenAI or any LLM API)
+OpenAI / LLM API for text generation
+
+qrcode (frontend QR generator)
+
+html2pdf.js / jsPDF for PDF export
+
+docx for DOCX export
