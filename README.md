@@ -158,18 +158,18 @@ npm run dev
 
 🛠️ Technologies Used
 
-React
+• React
 
-TypeScript
+• TypeScript
 
-Vite
+• Vite
 
-TailwindCSS + custom premium design system
+• TailwindCSS + custom premium design system
 
-OpenAI / LLM API for text generation
+• OpenAI / LLM API for text generation
 
-qrcode (frontend QR generator)
+• qrcode (frontend QR generator)
 
-html2pdf.js / jsPDF for PDF export
+• html2pdf.js / jsPDF for PDF export
 
-docx for DOCX export
+• docx for DOCX export
