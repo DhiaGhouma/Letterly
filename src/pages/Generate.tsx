@@ -8,6 +8,17 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useState } from "react";
 import { Sparkles, Copy, Download, Languages } from "lucide-react";
 import { toast } from "sonner";
+import { TemplateSelector } from "@/components/templates/TemplateSelector";
+import { LetterPreview } from "@/components/templates/LetterPreview";
+import { downloadPDF, downloadDOCX, downloadTXT } from "@/lib/downloadUtils";
+import { TemplateType } from "@/lib/templates";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -15,6 +26,7 @@ const Generate = () => {
     const { t } = useLanguage();
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedLetter, setGeneratedLetter] = useState("");
+    const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>("minimal");
     const [formData, setFormData] = useState({
         jobTitle: "",
         companyName: "",
@@ -154,16 +166,7 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
         navigator.clipboard.writeText(generatedLetter);
         toast.success("Copied to clipboard!");
     };
-    const downloadAsText = () => {
-        const a = document.createElement("a");
-        const file = new Blob([generatedLetter], { type: "text/plain" });
-        a.href = URL.createObjectURL(file);
-        a.download = `cover-letter-${formData.jobTitle.replace(/\s+/g, "-").toLowerCase()}.txt`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        toast.success("Downloaded successfully!");
-    };
+
 
     return (
         <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8">
@@ -237,29 +240,49 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
                                     <Button variant="outline" size="sm" onClick={copyToClipboard} className="glass-effect">
                                         <Copy size={16} className="mr-2" /> Copy
                                     </Button>
-                                    <Button variant="outline" size="sm" onClick={downloadAsText} className="glass-effect">
-                                        <Download size={16} className="mr-2" /> Download
-                                    </Button>
+                                    <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                            <Button variant="outline" size="sm" className="glass-effect">
+                                                <Download size={16} className="mr-2" /> Download <ChevronDown size={14} className="ml-1" />
+                                            </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end">
+                                            <DropdownMenuItem onClick={() => downloadPDF(generatedLetter, `cover-letter-${formData.jobTitle}`, selectedTemplate)}>
+                                                Download as PDF
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => downloadDOCX(generatedLetter, `cover-letter-${formData.jobTitle}`)}>
+                                                Download as DOCX
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem onClick={() => downloadTXT(generatedLetter, `cover-letter-${formData.jobTitle}`)}>
+                                                Download as TXT
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
                                 </div>
                             )}
                         </div>
 
                         <div className="min-h-[500px]">
                             {isGenerating ? (
-                                <div className="flex items-center justify-center h-full">
+                                <div className="flex items-center justify-center h-full min-h-[500px]">
                                     <div className="text-center">
                                         <Sparkles className="w-12 h-12 text-primary animate-spin mx-auto mb-4" />
                                         <p className="text-muted-foreground">Crafting your perfect cover letter...</p>
                                     </div>
                                 </div>
                             ) : generatedLetter ? (
-                                <div className="prose prose-sm max-w-none dark:prose-invert">
-                                    <pre className="whitespace-pre-wrap font-body text-foreground bg-transparent border-0 p-0">
-                                        {generatedLetter}
-                                    </pre>
+                                <div className="animate-in fade-in duration-500">
+                                    <TemplateSelector
+                                        selectedTemplate={selectedTemplate}
+                                        onSelectTemplate={setSelectedTemplate}
+                                    />
+                                    <LetterPreview
+                                        content={generatedLetter}
+                                        template={selectedTemplate}
+                                    />
                                 </div>
                             ) : (
-                                <div className="flex items-center justify-center h-full">
+                                <div className="flex items-center justify-center h-full min-h-[500px]">
                                     <div className="text-center text-muted-foreground">
                                         <Sparkles className="w-12 h-12 mx-auto mb-4 opacity-50" />
                                         <p>Your generated cover letter will appear here</p>
