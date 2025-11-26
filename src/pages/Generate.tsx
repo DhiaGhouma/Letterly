@@ -26,7 +26,7 @@ const Generate = () => {
     const { t } = useLanguage();
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedLetter, setGeneratedLetter] = useState("");
-    const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>("minimal");
+    const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>("minimalist");
     const [formData, setFormData] = useState({
         jobTitle: "",
         companyName: "",

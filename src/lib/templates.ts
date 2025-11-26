@@ -1,4 +1,4 @@
-export type TemplateType = "minimal" | "modern" | "premium";
+export type TemplateType = "executive" | "minimalist" | "prestige" | "modernist" | "classic" | "creative";
 
 export interface Template {
     id: TemplateType;
@@ -9,21 +9,39 @@ export interface Template {
 
 export const templates: Template[] = [
     {
-        id: "minimal",
-        name: "Minimal",
-        description: "Clean and simple, focusing on the content.",
+        id: "executive",
+        name: "Executive",
+        description: "Bold dark header with gold accents. Authoritative and professional.",
+        previewColor: "#1a1a1a",
+    },
+    {
+        id: "minimalist",
+        name: "Minimalist",
+        description: "Ultra-clean layout with refined typography and ample whitespace.",
         previewColor: "#ffffff",
     },
     {
-        id: "modern",
-        name: "Modern",
-        description: "Contemporary design with a touch of style.",
-        previewColor: "#f3f4f6",
+        id: "prestige",
+        name: "Prestige",
+        description: "Sophisticated double-border frame for high-end applications.",
+        previewColor: "#fcfcfc",
     },
     {
-        id: "premium",
-        name: "Premium",
-        description: "Elegant and sophisticated for high-level roles.",
-        previewColor: "#1a1a1a",
+        id: "modernist",
+        name: "Modernist",
+        description: "Contemporary design with a striking gold accent bar.",
+        previewColor: "#f8f9fa",
+    },
+    {
+        id: "classic",
+        name: "Classic",
+        description: "Timeless serif typography with centered elegance.",
+        previewColor: "#fffbf0",
+    },
+    {
+        id: "creative",
+        name: "Creative",
+        description: "Unique corner accents for a distinctive, modern look.",
+        previewColor: "#ffffff",
     },
 ];
