@@ -1,6 +1,7 @@
 import { jsPDF } from "jspdf";
-import { Document, Packer, Paragraph, TextRun } from "docx";
+import { Document, Packer, Paragraph, TextRun, ImageRun } from "docx";
 import { TemplateType } from "./templates";
+import QRCode from "qrcode";
 
 export const downloadTXT = (content: string, filename: string, authorName?: string) => {
     const element = document.createElement("a");
@@ -13,7 +14,7 @@ export const downloadTXT = (content: string, filename: string, authorName?: stri
     document.body.removeChild(element);
 };
 
-export const downloadPDF = (content: string, filename: string, template: TemplateType, authorName?: string) => {
+export const downloadPDF = async (content: string, filename: string, template: TemplateType, authorName?: string, link?: string) => {
     const doc = new jsPDF();
     const splitText = doc.splitTextToSize(content, 170); // Slightly narrower for safety
 
@@ -155,19 +156,85 @@ export const downloadPDF = (content: string, filename: string, template: Templat
         doc.line(95, y + textHeight + 10, 115, y + textHeight + 10);
     }
 
+    // QR Code
+    if (link) {
+        try {
+            const qrDataUrl = await QRCode.toDataURL(link, {
+                width: 100,
+                margin: 1,
+                color: {
+                    dark: "#000000",
+                    light: "#ffffff"
+                }
+            });
+
+            // Add QR Code to PDF
+            // Position top right
+            doc.addImage(qrDataUrl, 'PNG', 170, 10, 25, 25);
+
+            // Gold border for QR
+            doc.setDrawColor(234, 179, 8); // yellow-500
+            doc.setLineWidth(0.5);
+            doc.rect(170, 10, 25, 25);
+
+        } catch (err) {
+            console.error("Failed to generate QR for PDF", err);
+        }
+    }
+
     doc.save(`${filename}.pdf`);
 };
 
-export const downloadDOCX = async (content: string, filename: string, authorName?: string) => {
+export const downloadDOCX = async (content: string, filename: string, authorName?: string, link?: string) => {
+    const children: any[] = [];
+
+    // QR Code (if link exists)
+    if (link) {
+        try {
+            const qrDataUrl = await QRCode.toDataURL(link, {
+                width: 100,
+                margin: 1,
+                color: {
+                    dark: "#000000",
+                    light: "#ffffff"
+                }
+            });
+
+            // Convert data URL to buffer/blob for docx
+            const response = await fetch(qrDataUrl);
+            const blob = await response.blob();
+            const buffer = await blob.arrayBuffer();
+
+            children.push(new Paragraph({
+                children: [
+                    new ImageRun({
+                        data: buffer,
+                        transformation: {
+                            width: 100,
+                            height: 100,
+                        },
+                        type: "png",
+                    }),
+                ],
+                alignment: "right", // Align QR to right
+            }));
+        } catch (err) {
+            console.error("Failed to generate QR for DOCX", err);
+        }
+    }
+
+    // Content Paragraphs
     const paragraphs = content.split("\n\n").map(text => new Paragraph({
         children: [new TextRun(text)],
         spacing: {
             after: 200,
         },
     }));
+    children.push(...paragraphs);
 
+    // Signature
     if (authorName) {
-        paragraphs.push(new Paragraph({
+        children.push(new Paragraph({
             children: [new TextRun({ text: authorName, bold: true })],
             spacing: { before: 400 },
         }));
@@ -176,7 +243,7 @@ export const downloadDOCX = async (content: string, filename: string, authorName
     const doc = new Document({
         sections: [{
             properties: {},
-            children: paragraphs,
+            children: children,
         }],
     });
 

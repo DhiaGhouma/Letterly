@@ -1,34 +1,32 @@
-import { motion } from "framer-motion";
-import { useLanguage } from "@/contexts/LanguageContext";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useState } from "react";
-import { Sparkles, Copy, Download, Languages } from "lucide-react";
 import { toast } from "sonner";
-import { TemplateSelector } from "@/components/templates/TemplateSelector";
-import { LetterPreview } from "@/components/templates/LetterPreview";
-import { downloadPDF, downloadDOCX, downloadTXT } from "@/lib/downloadUtils";
-import { TemplateType } from "@/lib/templates";
+import { Sparkles, Copy, Download, ChevronDown, Languages } from "lucide-react";
+import { motion } from "framer-motion";
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { TemplateSelector } from "@/components/templates/TemplateSelector";
+import { LetterPreview } from "@/components/templates/LetterPreview";
+import { TemplateType } from "@/lib/templates";
+import { downloadPDF, downloadDOCX, downloadTXT } from "@/lib/downloadUtils";
+import { useTranslation } from "react-i18next";
 
 const Generate = () => {
-    const { t } = useLanguage();
+    const { t } = useTranslation();
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedLetter, setGeneratedLetter] = useState("");
     const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>("minimalist");
     const [formData, setFormData] = useState({
         fullName: "",
+        link: "",
         jobTitle: "",
         companyName: "",
         postDescription: "",
@@ -168,6 +166,7 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
         toast.success("Copied to clipboard!");
     };
 
+    const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
     return (
         <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8">
@@ -183,6 +182,11 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
                             <div className="space-y-2">
                                 <Label htmlFor="fullName" className="text-sm font-medium">Full Name</Label>
                                 <Input id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="e.g., John Doe" className="glass-effect border-border/50" />
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="link" className="text-sm font-medium">Link (Optional)</Label>
+                                <Input id="link" name="link" value={formData.link} onChange={handleChange} placeholder="e.g., GitHub, LinkedIn, Portfolio..." className="glass-effect border-border/50" />
                             </div>
 
                             <div className="space-y-2">
@@ -253,10 +257,10 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem onClick={() => downloadPDF(generatedLetter, `cover-letter-${formData.jobTitle}`, selectedTemplate, formData.fullName)}>
+                                            <DropdownMenuItem onClick={() => downloadPDF(generatedLetter, `cover-letter-${formData.jobTitle}`, selectedTemplate, formData.fullName, formData.link)}>
                                                 Download as PDF
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => downloadDOCX(generatedLetter, `cover-letter-${formData.jobTitle}`, formData.fullName)}>
+                                            <DropdownMenuItem onClick={() => downloadDOCX(generatedLetter, `cover-letter-${formData.jobTitle}`, formData.fullName, formData.link)}>
                                                 Download as DOCX
                                             </DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => downloadTXT(generatedLetter, `cover-letter-${formData.jobTitle}`, formData.fullName)}>
@@ -286,6 +290,7 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
                                         content={generatedLetter}
                                         template={selectedTemplate}
                                         authorName={formData.fullName}
+                                        link={formData.link}
                                     />
                                 </div>
                             ) : (
@@ -298,9 +303,9 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
                             )}
                         </div>
                     </motion.div>
-                </div >
-            </div >
-        </div >
+                </div>
+            </div>
+        </div>
     );
 };
 

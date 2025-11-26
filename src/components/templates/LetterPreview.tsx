@@ -1,15 +1,34 @@
 import { TemplateType } from "@/lib/templates";
 import { cn } from "@/lib/utils";
+import QRCode from "qrcode";
+import { useEffect, useState } from "react";
 
 interface LetterPreviewProps {
     content: string;
     template: TemplateType;
     authorName?: string;
+    link?: string;
 }
 
-export const LetterPreview = ({ content, template, authorName }: LetterPreviewProps) => {
+export const LetterPreview = ({ content, template, authorName, link }: LetterPreviewProps) => {
     // Simple parser to handle paragraphs
     const paragraphs = content.split("\n\n").filter(Boolean);
+    const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
+
+    useEffect(() => {
+        if (link) {
+            QRCode.toDataURL(link, {
+                width: 100,
+                margin: 1,
+                color: {
+                    dark: "#000000",
+                    light: "#ffffff"
+                }
+            }).then(setQrCodeUrl).catch(console.error);
+        } else {
+            setQrCodeUrl("");
+        }
+    }, [link]);
 
     return (
         <div className={cn(
@@ -60,6 +79,15 @@ export const LetterPreview = ({ content, template, authorName }: LetterPreviewPr
                     <div className="absolute top-8 left-8 w-16 h-16 border-t-2 border-l-2 border-yellow-500" />
                     <div className="absolute bottom-8 right-8 w-16 h-16 border-b-2 border-r-2 border-yellow-500" />
                 </>
+            )}
+
+            {/* QR Code Display */}
+            {qrCodeUrl && (
+                <div className="absolute top-8 right-8 z-20">
+                    <div className="bg-white p-1 border border-yellow-500/50 shadow-sm rounded-sm">
+                        <img src={qrCodeUrl} alt="QR Code" className="w-20 h-20" />
+                    </div>
+                </div>
             )}
 
             <div className={cn(
