@@ -25,6 +25,20 @@ const Contact = () => {
             return;
         }
 
+        // Create mailto link with both email addresses
+        const recipients = "ghoumadhia01@gmail.com,dhia.ghouma@esprit.tn";
+        const subject = encodeURIComponent(`Letterly Contact Form - Message from ${formData.name}`);
+        const body = encodeURIComponent(
+            `Name: ${formData.name}\n` +
+            `Email: ${formData.email}\n\n` +
+            `Message:\n${formData.message}`
+        );
+
+        const mailtoLink = `mailto:${recipients}?subject=${subject}&body=${body}`;
+
+        // Open default email client
+        window.location.href = mailtoLink;
+
         toast.success(t("messageSent"));
         setFormData({ name: "", email: "", message: "" });
     };
