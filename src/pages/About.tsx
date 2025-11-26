@@ -26,18 +26,18 @@ const About = () => {
                     {[
                         {
                             icon: Target,
-                            title: "Our Mission",
-                            desc: "Empower job seekers with AI technology to create compelling cover letters that get noticed.",
+                            title: t("ourMission"),
+                            desc: t("missionDesc"),
                         },
                         {
                             icon: Zap,
-                            title: "Lightning Fast",
-                            desc: "Generate professional cover letters in seconds, not hours. Save time and apply to more jobs.",
+                            title: t("lightningFast"),
+                            desc: t("fastDesc"),
                         },
                         {
                             icon: Shield,
-                            title: "Privacy First",
-                            desc: "Your data is secure and private. We never share your information with third parties.",
+                            title: t("privacyFirst"),
+                            desc: t("privacyDesc"),
                         },
                     ].map((feature, index) => (
                         <motion.div
@@ -67,27 +67,17 @@ const About = () => {
                     className="glass-effect p-8 sm:p-12 rounded-2xl shadow-premium"
                 >
                     <h2 className="text-3xl font-display font-bold mb-6">
-                        Why Letterly?
+                        {t("whyLetterly")}
                     </h2>
                     <div className="space-y-4 text-muted-foreground">
                         <p>
-                            In today's competitive job market, a well-crafted cover letter can
-                            be the difference between landing an interview and being
-                            overlooked. However, writing a compelling cover letter takes time,
-                            effort, and expertise.
+                            {t("whyText1")}
                         </p>
                         <p>
-                            Letterly combines advanced AI technology with proven writing
-                            strategies to help you create personalized, professional cover
-                            letters in seconds. Our AI analyzes your experience, the job
-                            requirements, and industry best practices to generate letters that
-                            highlight your unique value proposition.
+                            {t("whyText2")}
                         </p>
                         <p>
-                            Whether you're a seasoned professional or just starting your
-                            career, Letterly gives you the tools to present yourself in the
-                            best possible light and increase your chances of landing your dream
-                            job.
+                            {t("whyText3")}
                         </p>
                     </div>
                 </motion.div>

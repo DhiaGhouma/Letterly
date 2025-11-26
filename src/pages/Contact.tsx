@@ -21,11 +21,11 @@ const Contact = () => {
         e.preventDefault();
 
         if (!formData.name || !formData.email || !formData.message) {
-            toast.error("Please fill in all fields");
+            toast.error(t("fillAllFields"));
             return;
         }
 
-        toast.success("Message sent successfully!");
+        toast.success(t("messageSent"));
         setFormData({ name: "", email: "", message: "" });
     };
 
