@@ -2,9 +2,10 @@ import { jsPDF } from "jspdf";
 import { Document, Packer, Paragraph, TextRun } from "docx";
 import { TemplateType } from "./templates";
 
-export const downloadTXT = (content: string, filename: string) => {
+export const downloadTXT = (content: string, filename: string, authorName?: string) => {
     const element = document.createElement("a");
-    const file = new Blob([content], { type: "text/plain" });
+    const fullContent = authorName ? `${content}\n\n${authorName}` : content;
+    const file = new Blob([fullContent], { type: "text/plain" });
     element.href = URL.createObjectURL(file);
     element.download = `${filename}.txt`;
     document.body.appendChild(element);
@@ -12,7 +13,7 @@ export const downloadTXT = (content: string, filename: string) => {
     document.body.removeChild(element);
 };
 
-export const downloadPDF = (content: string, filename: string, template: TemplateType) => {
+export const downloadPDF = (content: string, filename: string, template: TemplateType, authorName?: string) => {
     const doc = new jsPDF();
     const splitText = doc.splitTextToSize(content, 170); // Slightly narrower for safety
 
@@ -22,11 +23,19 @@ export const downloadPDF = (content: string, filename: string, template: Templat
     if (template === "executive") {
         // Dark Header
         doc.setFillColor(26, 26, 26); // #1a1a1a
-        doc.rect(0, 0, 210, 40, "F");
+        doc.rect(0, 0, 210, 50, "F"); // Increased height to 50
         // Gold Accent Line
         doc.setDrawColor(202, 138, 4); // yellow-600
         doc.setLineWidth(1);
-        doc.line(0, 40, 210, 40);
+        doc.line(0, 50, 210, 50);
+
+        // Name in Header
+        if (authorName) {
+            doc.setFont("times", "bold");
+            doc.setFontSize(22);
+            doc.setTextColor(255, 255, 255);
+            doc.text(authorName.toUpperCase(), 20, 40);
+        }
 
         doc.setFont("helvetica", "normal");
         doc.setFontSize(11);
@@ -94,7 +103,7 @@ export const downloadPDF = (content: string, filename: string, template: Templat
     let x = 20; // Default margin
 
     if (template === "executive") {
-        y = 55; // Push down below header
+        y = 70; // Push down below header
     } else if (template === "modernist") {
         x = 25; // Push right for sidebar
     } else if (template === "classic") {
@@ -103,8 +112,43 @@ export const downloadPDF = (content: string, filename: string, template: Templat
 
     doc.text(splitText, x, y);
 
-    // Classic Bottom Separator
-    if (template === "classic") {
+    // Signature / Name at bottom
+    if (authorName) {
+        // Calculate Y position for signature based on text length
+        const lines = splitText.length;
+        const lineHeight = template === "executive" || template === "classic" || template === "prestige" ? 6 : 5; // Approx line height
+        let signatureY = y + (lines * lineHeight) + 20;
+
+        // Ensure signature doesn't go off page (basic check)
+        if (signatureY > 270) {
+            doc.addPage();
+            signatureY = 40;
+        }
+
+        if (template === "executive") {
+            doc.setFont("times", "bold");
+            doc.setFontSize(14);
+            doc.setTextColor(30, 30, 30);
+            doc.text(authorName, x, signatureY);
+            doc.setLineWidth(0.5);
+            doc.setDrawColor(200, 200, 200);
+            doc.line(x, signatureY - 8, x + 60, signatureY - 8); // Signature line
+        } else if (template === "classic") {
+            doc.setFont("times", "italic");
+            doc.setFontSize(14);
+            doc.text(authorName, 105, signatureY, { align: "center" });
+            doc.setLineWidth(0.5);
+            doc.setDrawColor(200, 200, 200);
+            doc.line(85, signatureY - 8, 125, signatureY - 8); // Centered line
+        } else {
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(12);
+            doc.text(authorName, x, signatureY);
+        }
+    }
+
+    // Classic Bottom Separator (if no name, or below name)
+    if (template === "classic" && !authorName) {
         // Estimate end of text (rough calculation)
         const lines = splitText.length;
         const textHeight = lines * 5; // Approx height per line
@@ -114,13 +158,20 @@ export const downloadPDF = (content: string, filename: string, template: Templat
     doc.save(`${filename}.pdf`);
 };
 
-export const downloadDOCX = async (content: string, filename: string) => {
+export const downloadDOCX = async (content: string, filename: string, authorName?: string) => {
     const paragraphs = content.split("\n\n").map(text => new Paragraph({
         children: [new TextRun(text)],
         spacing: {
             after: 200,
         },
     }));
+
+    if (authorName) {
+        paragraphs.push(new Paragraph({
+            children: [new TextRun({ text: authorName, bold: true })],
+            spacing: { before: 400 },
+        }));
+    }
 
     const doc = new Document({
         sections: [{

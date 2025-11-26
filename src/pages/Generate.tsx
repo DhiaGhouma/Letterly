@@ -28,6 +28,7 @@ const Generate = () => {
     const [generatedLetter, setGeneratedLetter] = useState("");
     const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>("minimalist");
     const [formData, setFormData] = useState({
+        fullName: "",
         jobTitle: "",
         companyName: "",
         postDescription: "",
@@ -180,6 +181,11 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
                     <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="glass-effect p-8 rounded-2xl shadow-premium h-fit">
                         <div className="space-y-6">
                             <div className="space-y-2">
+                                <Label htmlFor="fullName" className="text-sm font-medium">Full Name</Label>
+                                <Input id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="e.g., John Doe" className="glass-effect border-border/50" />
+                            </div>
+
+                            <div className="space-y-2">
                                 <Label htmlFor="jobTitle" className="text-sm font-medium">{t("jobTitle")} *</Label>
                                 <Input id="jobTitle" name="jobTitle" value={formData.jobTitle} onChange={handleChange} placeholder="e.g., Senior Software Engineer" className="glass-effect border-border/50" />
                             </div>
@@ -247,13 +253,13 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem onClick={() => downloadPDF(generatedLetter, `cover-letter-${formData.jobTitle}`, selectedTemplate)}>
+                                            <DropdownMenuItem onClick={() => downloadPDF(generatedLetter, `cover-letter-${formData.jobTitle}`, selectedTemplate, formData.fullName)}>
                                                 Download as PDF
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => downloadDOCX(generatedLetter, `cover-letter-${formData.jobTitle}`)}>
+                                            <DropdownMenuItem onClick={() => downloadDOCX(generatedLetter, `cover-letter-${formData.jobTitle}`, formData.fullName)}>
                                                 Download as DOCX
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => downloadTXT(generatedLetter, `cover-letter-${formData.jobTitle}`)}>
+                                            <DropdownMenuItem onClick={() => downloadTXT(generatedLetter, `cover-letter-${formData.jobTitle}`, formData.fullName)}>
                                                 Download as TXT
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
@@ -279,6 +285,7 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
                                     <LetterPreview
                                         content={generatedLetter}
                                         template={selectedTemplate}
+                                        authorName={formData.fullName}
                                     />
                                 </div>
                             ) : (
@@ -291,9 +298,9 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
                             )}
                         </div>
                     </motion.div>
-                </div>
-            </div>
-        </div>
+                </div >
+            </div >
+        </div >
     );
 };
 

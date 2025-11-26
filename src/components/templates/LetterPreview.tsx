@@ -4,9 +4,10 @@ import { cn } from "@/lib/utils";
 interface LetterPreviewProps {
     content: string;
     template: TemplateType;
+    authorName?: string;
 }
 
-export const LetterPreview = ({ content, template }: LetterPreviewProps) => {
+export const LetterPreview = ({ content, template, authorName }: LetterPreviewProps) => {
     // Simple parser to handle paragraphs
     const paragraphs = content.split("\n\n").filter(Boolean);
 
@@ -36,7 +37,11 @@ export const LetterPreview = ({ content, template }: LetterPreviewProps) => {
         )}>
             {/* Executive Header Background */}
             {template === "executive" && (
-                <div className="absolute top-0 left-0 right-0 h-32 bg-[#1a1a1a] border-b-4 border-yellow-600/80" />
+                <div className="absolute top-0 left-0 right-0 h-40 bg-[#1a1a1a] border-b-4 border-yellow-600/80 flex items-end pb-6 px-16">
+                    {authorName && (
+                        <h1 className="text-3xl font-serif text-white tracking-wide uppercase">{authorName}</h1>
+                    )}
+                </div>
             )}
 
             {/* Prestige Border */}
@@ -59,7 +64,7 @@ export const LetterPreview = ({ content, template }: LetterPreviewProps) => {
 
             <div className={cn(
                 "relative z-10 max-w-2xl mx-auto space-y-6",
-                template === "executive" && "mt-12", // Push content down for header
+                template === "executive" && "mt-24", // Push content down for header
                 template === "classic" && "text-center", // Center text for classic
                 template === "minimalist" && "max-w-3xl", // Wider for minimalist
             )}>
@@ -76,8 +81,24 @@ export const LetterPreview = ({ content, template }: LetterPreviewProps) => {
                     )}>{paragraph}</p>
                 ))}
 
+                {/* Signature Area */}
+                {authorName && (
+                    <div className={cn(
+                        "mt-12 pt-8",
+                        template === "classic" && "border-t border-gray-900/20 w-48 mx-auto",
+                        template === "modernist" && "border-t-2 border-yellow-500 w-48",
+                        template === "executive" && "border-t border-gray-300 w-64",
+                    )}>
+                        <p className={cn(
+                            "font-semibold text-lg",
+                            template === "classic" && "font-serif italic",
+                            template === "executive" && "font-serif text-xl tracking-wide",
+                        )}>{authorName}</p>
+                    </div>
+                )}
+
                 {/* Classic Bottom Separator */}
-                {template === "classic" && (
+                {template === "classic" && !authorName && (
                     <div className="w-24 h-1 bg-gray-900 mx-auto mt-12 opacity-20" />
                 )}
             </div>
