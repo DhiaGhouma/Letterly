@@ -81,10 +81,20 @@ export const LetterPreview = ({ content, template, authorName, link }: LetterPre
                 </>
             )}
 
-            {/* QR Code Display */}
+            {/* QR Code Display - Optimally positioned to avoid text collision */}
             {qrCodeUrl && (
-                <div className="absolute top-8 right-8 z-20">
-                    <div className="bg-white p-1 border border-yellow-500/50 shadow-sm rounded-sm">
+                <div className={cn(
+                    "absolute z-20",
+                    // Position based on template to avoid collisions
+                    template === "creative" && "bottom-20 right-20", // Avoid corner decorations
+                    template === "executive" && "bottom-8 right-8", // Safe bottom placement
+                    template === "prestige" && "bottom-16 right-16", // Inside the border
+                    template === "modernist" && "bottom-8 right-8", // Away from left sidebar
+                    template === "classic" && "bottom-8 right-8", // Standard placement
+                    template === "minimalist" && "bottom-8 right-8", // Clean placement
+                    !template && "bottom-8 right-8" // Default fallback
+                )}>
+                    <div className="bg-white p-2 border border-yellow-500/50 shadow-md rounded-sm">
                         <img src={qrCodeUrl} alt="QR Code" className="w-20 h-20" />
                     </div>
                 </div>
