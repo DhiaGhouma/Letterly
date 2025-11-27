@@ -63,7 +63,7 @@ const Generate = () => {
     };
 
     const generateCoverLetter = async () => {
-        const prompt = `You are a professional cover letter writer. Create a compelling, personalized cover letter based on the following information:
+        const prompt = `You are a professional cover letter writer. Create a compelling, personalized cover letter based on the following information without any placeholder text or notes:
 
 Job Title: ${formData.jobTitle}
 Company Name: ${formData.companyName}
@@ -82,7 +82,7 @@ Write a professional cover letter that:
 6. Is formatted professionally with proper paragraphs
 7. Is between 250-400 words
 
-Do not include placeholder text like [Your Name], [Your Address], or [Date]. Start directly with the salutation and end with "Sincerely," (or the appropriate closing in the target language) followed by a blank line for the signature.`;
+Do not include placeholder text like [Your Name], [Your Address], or [Date]. Start directly with the salutation and end with (the appropriate closing in the target language) `;
 
         const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
         const URL = "https://api.groq.com/openai/v1/chat/completions";
