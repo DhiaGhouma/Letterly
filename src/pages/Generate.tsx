@@ -63,7 +63,7 @@ const Generate = () => {
     };
 
     const generateCoverLetter = async () => {
-        const prompt = `You are an expert HR-focused cover letter writer. Create a concise, impactful cover letter that gets straight to the point.
+        const prompt = `You are an expert HR-focused cover letter writer. Create a concise, impactful cover letter that gets straight to the point and never use placeholders.
 
 Job Title: ${formData.jobTitle}
 Company Name: ${formData.companyName}
