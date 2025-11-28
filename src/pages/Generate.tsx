@@ -63,7 +63,7 @@ const Generate = () => {
     };
 
     const generateCoverLetter = async () => {
-        const prompt = `You are a professional cover letter writer. Create a compelling, personalized cover letter based on the following information without any placeholder text or notes:
+        const prompt = `You are an expert HR-focused cover letter writer. Create a concise, impactful cover letter that gets straight to the point.
 
 Job Title: ${formData.jobTitle}
 Company Name: ${formData.companyName}
@@ -71,22 +71,33 @@ ${formData.postDescription ? `Job Description: ${formData.postDescription}` : ""
 ${formData.experience ? `Candidate's Experience: ${formData.experience}` : ""}
 ${formData.skills ? `Key Skills: ${formData.skills}` : ""}
 
-IMPORTANT: ${getLanguageInstruction(formData.letterLanguage)}
+LANGUAGE: ${getLanguageInstruction(formData.letterLanguage)}
 
-Write a professional cover letter that:
-1. Has a strong opening that captures attention
-2. Highlights relevant experience and skills
-3. Shows enthusiasm for the role and company
-4. Demonstrates knowledge of the company (if job description provided)
-5. Includes a compelling closing statement
-6. Is formatted professionally with proper paragraphs
-7. Is between 250-400 words
+REQUIREMENTS:
+- Length: 200-300 words maximum (3-4 paragraphs)
+- Opening: One powerful sentence stating the position and key value proposition
+- Body: 1-2 paragraphs highlighting ONLY the most relevant achievements/skills with specific examples
+- Closing: Brief, confident call to action
+- Tone: Professional yet authentic, no fluff or generic statements
+- Focus: What value the candidate brings, not what they want from the job
 
-Do not include placeholder text like [Your Name], [Your Address], or [Date]. Start directly with the salutation and end with (the appropriate closing in the target language) `;
+AVOID:
+- Generic phrases like "I am writing to apply" or "I am excited about this opportunity"
+- Repetition of resume content without context
+- Unnecessary adjectives or filler words
+- Long-winded explanations
+
+FORMAT:
+- No placeholders [Your Name], [Date], etc.
+- Start with: Dear Hiring Manager, (or equivalent in target language)
+- End with: Best regards, (or equivalent in target language)
+- Use short, punchy paragraphs
+
+Make every sentence count. HR managers spend 6-10 seconds scanning - make those seconds matter.`;
 
         const API_KEY = import.meta.env.VITE_GROQ_API_KEY;
         const URL = "https://api.groq.com/openai/v1/chat/completions";
-        const MODEL = "llama-3.3-70b-versatile"; // Updated model
+        const MODEL = "llama-3.3-70b-versatile";
 
         let attempts = 0;
         const maxAttempts = 3;
@@ -102,7 +113,7 @@ Do not include placeholder text like [Your Name], [Your Address], or [Date]. Sta
                     body: JSON.stringify({
                         model: MODEL,
                         messages: [
-                            { role: "system", content: "You are a helpful assistant that writes business cover letters." },
+                            { role: "system", content: "You are an expert cover letter writer who creates concise, impactful letters optimized for HR professionals. You focus on value proposition and avoid generic filler." },
                             { role: "user", content: prompt },
                         ],
                         temperature: 0.7,
