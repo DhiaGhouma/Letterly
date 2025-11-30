@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
-import { Sparkles, Copy, Download, ChevronDown, Languages } from "lucide-react";
+import { Sparkles, Copy, Download, ChevronDown, Languages, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import {
     DropdownMenu,
@@ -13,6 +13,18 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+    Command,
+    CommandEmpty,
+    CommandGroup,
+    CommandInput,
+    CommandItem,
+} from "@/components/ui/command";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 import { TemplateSelector } from "@/components/templates/TemplateSelector";
 import { LetterPreview } from "@/components/templates/LetterPreview";
 import { TemplateType } from "@/lib/templates";
@@ -24,6 +36,7 @@ const Generate = () => {
     const [isGenerating, setIsGenerating] = useState(false);
     const [generatedLetter, setGeneratedLetter] = useState("");
     const [selectedTemplate, setSelectedTemplate] = useState<TemplateType>("minimalist");
+    const [openCountryPicker, setOpenCountryPicker] = useState(false);
     const [formData, setFormData] = useState({
         fullName: "",
         link: "",
@@ -33,18 +46,73 @@ const Generate = () => {
         experience: "",
         skills: "",
         letterLanguage: "english",
+        phoneNumber: "",
+        countryCode: "+216",
     });
 
+    const countryOptions = [
+        { code: "+216", country: "Tunisia", flag: "🇹🇳", search: "tunisia tn" },
+        { code: "+90", country: "Turkey", flag: "🇹🇷", search: "turkey tr" },
+        { code: "+1", country: "USA", flag: "🇺🇸", search: "usa us america united states" },
+        { code: "+1", country: "Canada", flag: "🇨🇦", search: "canada ca" },
+        { code: "+44", country: "UK", flag: "🇬🇧", search: "uk gb britain united kingdom england" },
+        { code: "+33", country: "France", flag: "🇫🇷", search: "france fr" },
+        { code: "+34", country: "Spain", flag: "🇪🇸", search: "spain es españa" },
+        { code: "+49", country: "Germany", flag: "🇩🇪", search: "germany de deutschland" },
+        { code: "+39", country: "Italy", flag: "🇮🇹", search: "italy it italia" },
+        { code: "+351", country: "Portugal", flag: "🇵🇹", search: "portugal pt" },
+        { code: "+966", country: "Saudi Arabia", flag: "🇸🇦", search: "saudi arabia sa ksa" },
+        { code: "+86", country: "China", flag: "🇨🇳", search: "china cn" },
+        { code: "+81", country: "Japan", flag: "🇯🇵", search: "japan jp" },
+        { code: "+91", country: "India", flag: "🇮🇳", search: "india in" },
+        { code: "+971", country: "UAE", flag: "🇦🇪", search: "uae ae emirates dubai" },
+        { code: "+212", country: "Morocco", flag: "🇲🇦", search: "morocco ma" },
+        { code: "+213", country: "Algeria", flag: "🇩🇿", search: "algeria dz" },
+        { code: "+20", country: "Egypt", flag: "🇪🇬", search: "egypt eg" },
+        { code: "+27", country: "South Africa", flag: "🇿🇦", search: "south africa za" },
+        { code: "+61", country: "Australia", flag: "🇦🇺", search: "australia au" },
+        { code: "+55", country: "Brazil", flag: "🇧🇷", search: "brazil br brasil" },
+        { code: "+52", country: "Mexico", flag: "🇲🇽", search: "mexico mx" },
+        { code: "+31", country: "Netherlands", flag: "🇳🇱", search: "netherlands nl holland" },
+        { code: "+32", country: "Belgium", flag: "🇧🇪", search: "belgium be" },
+        { code: "+41", country: "Switzerland", flag: "🇨🇭", search: "switzerland ch" },
+        { code: "+43", country: "Austria", flag: "🇦🇹", search: "austria at" },
+        { code: "+45", country: "Denmark", flag: "🇩🇰", search: "denmark dk" },
+        { code: "+46", country: "Sweden", flag: "🇸🇪", search: "sweden se" },
+        { code: "+47", country: "Norway", flag: "🇳🇴", search: "norway no" },
+        { code: "+358", country: "Finland", flag: "🇫🇮", search: "finland fi" },
+        { code: "+48", country: "Poland", flag: "🇵🇱", search: "poland pl" },
+        { code: "+7", country: "Russia", flag: "🇷🇺", search: "russia ru" },
+        { code: "+82", country: "South Korea", flag: "🇰🇷", search: "korea kr south korea" },
+        { code: "+65", country: "Singapore", flag: "🇸🇬", search: "singapore sg" },
+        { code: "+60", country: "Malaysia", flag: "🇲🇾", search: "malaysia my" },
+        { code: "+66", country: "Thailand", flag: "🇹🇭", search: "thailand th" },
+        { code: "+84", country: "Vietnam", flag: "🇻🇳", search: "vietnam vn" },
+        { code: "+62", country: "Indonesia", flag: "🇮🇩", search: "indonesia id" },
+        { code: "+63", country: "Philippines", flag: "🇵🇭", search: "philippines ph" },
+        { code: "+64", country: "New Zealand", flag: "🇳🇿", search: "new zealand nz" },
+        { code: "+234", country: "Nigeria", flag: "🇳🇬", search: "nigeria ng" },
+        { code: "+254", country: "Kenya", flag: "🇰🇪", search: "kenya ke" },
+        { code: "+92", country: "Pakistan", flag: "🇵🇰", search: "pakistan pk" },
+        { code: "+880", country: "Bangladesh", flag: "🇧🇩", search: "bangladesh bd" },
+        { code: "+98", country: "Iran", flag: "🇮🇷", search: "iran ir" },
+        { code: "+964", country: "Iraq", flag: "🇮🇶", search: "iraq iq" },
+        { code: "+962", country: "Jordan", flag: "🇯🇴", search: "jordan jo" },
+        { code: "+961", country: "Lebanon", flag: "🇱🇧", search: "lebanon lb" },
+        { code: "+972", country: "Israel", flag: "🇮🇱", search: "israel il" },
+        { code: "+30", country: "Greece", flag: "🇬🇷", search: "greece gr" },
+    ].sort((a, b) => a.country.localeCompare(b.country));
+
     const languageOptions = [
-        { value: "english", label: "English" },
-        { value: "french", label: "Français (French)" },
-        { value: "spanish", label: "Español (Spanish)" },
-        { value: "german", label: "Deutsch (German)" },
-        { value: "italian", label: "Italiano (Italian)" },
-        { value: "portuguese", label: "Português (Portuguese)" },
-        { value: "arabic", label: "العربية (Arabic)" },
-        { value: "chinese", label: "中文 (Chinese)" },
-        { value: "japanese", label: "日本語 (Japanese)" },
+        { value: "english", label: "English", flag: "🇬🇧" },
+        { value: "french", label: "Français", flag: "🇫🇷" },
+        { value: "spanish", label: "Español", flag: "🇪🇸" },
+        { value: "german", label: "Deutsch", flag: "🇩🇪" },
+        { value: "italian", label: "Italiano", flag: "🇮🇹" },
+        { value: "portuguese", label: "Português", flag: "🇵🇹" },
+        { value: "arabic", label: "العربية", flag: "🇸🇦" },
+        { value: "chinese", label: "中文", flag: "🇨🇳" },
+        { value: "japanese", label: "日本語", flag: "🇯🇵" },
     ];
 
     const getLanguageInstruction = (lang: string) => {
@@ -172,12 +240,20 @@ Make every sentence count. HR managers spend 6-10 seconds scanning - make those 
     const handleLanguageChange = (value: string) => {
         setFormData({ ...formData, letterLanguage: value });
     };
+    const handleCountryCodeChange = (value: string) => {
+        setFormData({ ...formData, countryCode: value });
+    };
     const copyToClipboard = () => {
         navigator.clipboard.writeText(generatedLetter);
         toast.success(t("successCopied"));
     };
 
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+    const selectedLanguage = languageOptions.find(lang => lang.value === formData.letterLanguage);
+    const selectedCountry = countryOptions.find(c => c.code === formData.countryCode);
+
+    const fullPhoneNumber = formData.phoneNumber ? `${formData.countryCode} ${formData.phoneNumber}` : "";
 
     return (
         <div className="min-h-screen pt-24 pb-20 px-4 sm:px-6 lg:px-8">
@@ -194,6 +270,69 @@ Make every sentence count. HR managers spend 6-10 seconds scanning - make those 
                                 <Label htmlFor="fullName" className="text-sm font-medium">{t("fullName")}</Label>
                                 <Input id="fullName" name="fullName" value={formData.fullName} onChange={handleChange} placeholder="e.g., John Doe" className="glass-effect border-border/50" />
                             </div>
+
+                            <div className="space-y-2">
+                                <Label htmlFor="phoneNumber" className="text-sm font-medium">{t("phoneNumber")}</Label>
+                                <div className="flex gap-2">
+                                    <Popover open={openCountryPicker} onOpenChange={setOpenCountryPicker}>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant="outline"
+                                                role="combobox"
+                                                aria-expanded={openCountryPicker}
+                                                className="glass-effect border-border/50 w-[160px] justify-between"
+                                            >
+                                                {selectedCountry ? (
+                                                    <span className="flex items-center gap-2">
+                                                        <span className="text-2xl leading-none">{selectedCountry.flag}</span>
+                                                        <span className="font-mono text-sm">{selectedCountry.code}</span>
+                                                    </span>
+                                                ) : (
+                                                    <span className="flex items-center gap-2">
+                                                        <Search size={16} />
+                                                        <span>Select...</span>
+                                                    </span>
+                                                )}
+                                                <ChevronDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="w-[300px] p-0" align="start">
+                                            <Command>
+                                                <CommandInput placeholder="Search country... (e.g., Tunisia, Turkey)" />
+                                                <CommandEmpty>No country found.</CommandEmpty>
+                                                <CommandGroup className="max-h-[300px] overflow-auto">
+                                                    {countryOptions.map((country) => (
+                                                        <CommandItem
+                                                            key={`${country.code}-${country.country}`}
+                                                            value={country.search}
+                                                            onSelect={() => {
+                                                                setFormData({ ...formData, countryCode: country.code });
+                                                                setOpenCountryPicker(false);
+                                                            }}
+                                                        >
+                                                            <span className="flex items-center gap-3 w-full">
+                                                                <span className="text-2xl leading-none">{country.flag}</span>
+                                                                <span className="flex-1">{country.country}</span>
+                                                                <span className="font-mono text-sm text-muted-foreground">{country.code}</span>
+                                                            </span>
+                                                        </CommandItem>
+                                                    ))}
+                                                </CommandGroup>
+                                            </Command>
+                                        </PopoverContent>
+                                    </Popover>
+                                    <Input
+                                        id="phoneNumber"
+                                        name="phoneNumber"
+                                        value={formData.phoneNumber}
+                                        onChange={handleChange}
+                                        placeholder="e.g., 12 345 678"
+                                        className="glass-effect border-border/50 flex-1"
+                                        type="tel"
+                                    />
+                                </div>
+                            </div>
+
 
                             <div className="space-y-2">
                                 <Label htmlFor="link" className="text-sm font-medium">{t("linkOptional")}</Label>
@@ -215,10 +354,24 @@ Make every sentence count. HR managers spend 6-10 seconds scanning - make those 
                                     <Languages size={16} /> {t("letterLanguage")} *
                                 </Label>
                                 <Select value={formData.letterLanguage} onValueChange={handleLanguageChange}>
-                                    <SelectTrigger className="glass-effect border-border/50"><SelectValue placeholder={t("selectLanguage")} /></SelectTrigger>
+                                    <SelectTrigger className="glass-effect border-border/50">
+                                        <SelectValue>
+                                            {selectedLanguage && (
+                                                <span className="flex items-center gap-2">
+                                                    <span className="text-xl">{selectedLanguage.flag}</span>
+                                                    <span>{selectedLanguage.label}</span>
+                                                </span>
+                                            )}
+                                        </SelectValue>
+                                    </SelectTrigger>
                                     <SelectContent>
                                         {languageOptions.map((lang) => (
-                                            <SelectItem key={lang.value} value={lang.value}>{lang.label}</SelectItem>
+                                            <SelectItem key={lang.value} value={lang.value}>
+                                                <span className="flex items-center gap-2">
+                                                    <span className="text-xl">{lang.flag}</span>
+                                                    <span>{lang.label}</span>
+                                                </span>
+                                            </SelectItem>
                                         ))}
                                     </SelectContent>
                                 </Select>
@@ -268,10 +421,10 @@ Make every sentence count. HR managers spend 6-10 seconds scanning - make those 
                                             </Button>
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end">
-                                            <DropdownMenuItem onClick={() => downloadPDF(generatedLetter, `cover-letter-${formData.jobTitle}`, selectedTemplate, formData.fullName, formData.link)}>
+                                            <DropdownMenuItem onClick={() => downloadPDF(generatedLetter, `cover-letter-${formData.jobTitle}`, selectedTemplate, formData.fullName, formData.link, fullPhoneNumber)}>
                                                 {t("downloadPDF")}
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => downloadDOCX(generatedLetter, `cover-letter-${formData.jobTitle}`, formData.fullName, formData.link)}>
+                                            <DropdownMenuItem onClick={() => downloadDOCX(generatedLetter, `cover-letter-${formData.jobTitle}`, formData.fullName, formData.link, fullPhoneNumber)}>
                                                 {t("downloadDOCX")}
                                             </DropdownMenuItem>
                                             <DropdownMenuItem onClick={() => downloadTXT(generatedLetter, `cover-letter-${formData.jobTitle}`, formData.fullName)}>
@@ -302,6 +455,7 @@ Make every sentence count. HR managers spend 6-10 seconds scanning - make those 
                                         template={selectedTemplate}
                                         authorName={formData.fullName}
                                         link={formData.link}
+                                        phoneNumber={fullPhoneNumber}
                                     />
                                 </div>
                             ) : (

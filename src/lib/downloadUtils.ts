@@ -14,7 +14,7 @@ export const downloadTXT = (content: string, filename: string, authorName?: stri
     document.body.removeChild(element);
 };
 
-export const downloadPDF = async (content: string, filename: string, template: TemplateType, authorName?: string, link?: string) => {
+export const downloadPDF = async (content: string, filename: string, template: TemplateType, authorName?: string, link?: string, phoneNumber?: string) => {
     const doc = new jsPDF();
     const splitText = doc.splitTextToSize(content, 170); // Slightly narrower for safety
 
@@ -36,6 +36,12 @@ export const downloadPDF = async (content: string, filename: string, template: T
             doc.setFontSize(22);
             doc.setTextColor(255, 255, 255);
             doc.text(authorName.toUpperCase(), 20, 40);
+
+            if (phoneNumber) {
+                doc.setFontSize(10);
+                doc.setFont("helvetica", "normal");
+                doc.text(phoneNumber, 20, 46);
+            }
         }
 
         doc.setFont("helvetica", "normal");
@@ -146,6 +152,13 @@ export const downloadPDF = async (content: string, filename: string, template: T
             doc.setFontSize(12);
             doc.text(authorName, x, signatureY);
         }
+
+        if (phoneNumber && template !== "executive") {
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(10);
+            doc.setTextColor(60, 60, 60);
+            doc.text(phoneNumber, template === "classic" ? 105 : x, signatureY + 6, { align: template === "classic" ? "center" : "left" });
+        }
     }
 
     // Classic Bottom Separator (if no name, or below name)
@@ -185,7 +198,7 @@ export const downloadPDF = async (content: string, filename: string, template: T
     doc.save(`${filename}.pdf`);
 };
 
-export const downloadDOCX = async (content: string, filename: string, authorName?: string, link?: string) => {
+export const downloadDOCX = async (content: string, filename: string, authorName?: string, link?: string, phoneNumber?: string) => {
     const children: any[] = [];
 
     // QR Code (if link exists)
@@ -238,6 +251,13 @@ export const downloadDOCX = async (content: string, filename: string, authorName
             children: [new TextRun({ text: authorName, bold: true })],
             spacing: { before: 400 },
         }));
+
+        if (phoneNumber) {
+            children.push(new Paragraph({
+                children: [new TextRun({ text: phoneNumber, size: 20 })], // size is in half-points, so 20 = 10pt
+                spacing: { before: 100 },
+            }));
+        }
     }
 
     const doc = new Document({

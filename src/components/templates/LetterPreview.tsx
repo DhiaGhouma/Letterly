@@ -8,9 +8,10 @@ interface LetterPreviewProps {
     template: TemplateType;
     authorName?: string;
     link?: string;
+    phoneNumber?: string;
 }
 
-export const LetterPreview = ({ content, template, authorName, link }: LetterPreviewProps) => {
+export const LetterPreview = ({ content, template, authorName, link, phoneNumber }: LetterPreviewProps) => {
     // Simple parser to handle paragraphs
     const paragraphs = content.split("\n\n").filter(Boolean);
     const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
@@ -58,7 +59,10 @@ export const LetterPreview = ({ content, template, authorName, link }: LetterPre
             {template === "executive" && (
                 <div className="absolute top-0 left-0 right-0 h-40 bg-[#1a1a1a] border-b-4 border-yellow-600/80 flex items-end pb-6 px-16">
                     {authorName && (
-                        <h1 className="text-3xl font-serif text-white tracking-wide uppercase">{authorName}</h1>
+                        <div>
+                            <h1 className="text-3xl font-serif text-white tracking-wide uppercase">{authorName}</h1>
+                            {phoneNumber && <p className="text-white/80 text-sm mt-1">{phoneNumber}</p>}
+                        </div>
                     )}
                 </div>
             )}
@@ -132,6 +136,12 @@ export const LetterPreview = ({ content, template, authorName, link }: LetterPre
                             template === "classic" && "font-serif italic",
                             template === "executive" && "font-serif text-xl tracking-wide",
                         )}>{authorName}</p>
+                        {phoneNumber && template !== "executive" && (
+                            <p className={cn(
+                                "text-sm mt-1 text-gray-600",
+                                template === "classic" && "italic",
+                            )}>{phoneNumber}</p>
+                        )}
                     </div>
                 )}
 
